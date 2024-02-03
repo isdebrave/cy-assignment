@@ -2,28 +2,18 @@ import { useRef, useState } from "react";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 
 import Card from "./Card";
-
-const data = [
-  { id: "1", title: "이미지1" },
-  { id: "2", title: "이미지2" },
-  { id: "3", title: "이미지3" },
-  { id: "4", title: "이미지4" },
-  { id: "5", title: "이미지5" },
-  { id: "6", title: "이미지6" },
-  { id: "7", title: "이미지7" },
-  { id: "8", title: "이미지8" },
-  { id: "9", title: "이미지9" },
-  { id: "10", title: "이미지10" },
-  { id: "11", title: "이미지11" },
-  { id: "12", title: "이미지12" },
-  { id: "13", title: "이미지13" },
-];
+import { contentType } from "../types/contentType";
+import { recentContentType } from "../types/recentContentType";
+import { playListType } from "../types/playListType";
+import usePlayList from "../hooks/usePlayList";
 
 interface Props {
+  data: contentType[] | recentContentType[];
   trashcan?: boolean;
 }
 
-const Carousel: React.FC<Props> = ({ trashcan }) => {
+const Carousel: React.FC<Props> = ({ data, trashcan }) => {
+  const { data: playList = [] } = usePlayList();
   const [offset, setOffset] = useState(0);
   const [hasPrevPage, setHasPrevPage] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -77,7 +67,15 @@ const Carousel: React.FC<Props> = ({ trashcan }) => {
           style={{ transform: `translateX(-${offset}px)` }}
         >
           {data.map((item) => (
-            <Card key={item.id} title={item.title} trashcan={trashcan} />
+            <div key={item.id + Math.random()} className="mb-4">
+              <Card
+                disabled={
+                  !!playList.find((v: playListType) => v.id === item.id)
+                }
+                item={item}
+                trashcan={trashcan}
+              />
+            </div>
           ))}
         </div>
       </div>

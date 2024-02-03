@@ -1,11 +1,13 @@
+import axios from "axios";
 import { useRef } from "react";
 import { IoClose } from "react-icons/io5";
 
 import Button from "./Button";
 import usePlayList from "../hooks/usePlayList";
+import { playListType } from "../types/playListType";
 
 const PlayList = () => {
-  const playList = usePlayList();
+  const { data: playList, removePlayListMutate } = usePlayList();
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -15,32 +17,44 @@ const PlayList = () => {
         <Button onClick={() => {}} label="재생" fit />
       </div>
       <div ref={containerRef}>
-        {playList.data.map((item, idx) => (
+        {playList?.map((item: playListType, idx: number) => (
           <div key={item.id} className="flex items-center relative">
-            <div className="absolute top-0 right-0 m-2 cursor-pointer">
+            <div
+              onClick={() => removePlayListMutate(item.id)}
+              className="absolute top-0 right-0 m-2 cursor-pointer"
+            >
               <IoClose />
             </div>
             <div className="w-[100px] h-[100px] flex relative">
-              <img
-                id={`img${idx}`}
-                src={item.src}
-                alt="Image"
-                className="w-full object-cover"
-              />
+              {item.type === "Video" ? (
+                <video
+                  src={`${axios.defaults.baseURL}/${item.src}`}
+                  autoPlay
+                  muted
+                  className="w-full object-cover"
+                ></video>
+              ) : (
+                <img
+                  id={`img${idx}`}
+                  src={`${axios.defaults.baseURL}/${item.src}`}
+                  alt="Image"
+                  className="w-full object-cover"
+                />
+              )}
             </div>
             <div className="p-2">
               <div className="grid grid-cols-2 font-semibold text-gray-500">
                 <span>Time</span>
-                <span>01:30</span>
+                <span>{item.time}</span>
               </div>
               <h3 className="text-xl font-bold">{item.title}</h3>
               <div className="grid grid-cols-2 font-semibold text-gray-500">
                 <span>Type</span>
-                <span>Video</span>
+                <span>{item.type}</span>
               </div>
               <div className="grid grid-cols-2 font-semibold text-gray-500">
                 <span>Size</span>
-                <span>30MB</span>
+                <span>{item.size}</span>
               </div>
             </div>
           </div>

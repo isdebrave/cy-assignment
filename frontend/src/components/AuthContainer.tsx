@@ -18,7 +18,7 @@ const AuthContainer: React.FC<Props> = ({ children }) => {
       <div
         className="
           w-full 
-          max-w-72 
+          max-w-80 
           p-4 
           rounded-xl 
           shadow-lg

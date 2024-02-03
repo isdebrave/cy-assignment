@@ -1,0 +1,68 @@
+const contentDatabase = [
+  {
+    id: "12",
+    src: "images/1.jpg",
+    title: "이미지12",
+    type: "Image",
+    size: "30MB",
+    time: "None",
+  },
+  {
+    id: "8",
+    src: "videos/3.mp4",
+    title: "영상3",
+    type: "Video",
+    size: "30MB",
+    time: "12:14",
+  },
+  {
+    id: "14",
+    src: "images/2.jpg",
+    title: "이미지14",
+    type: "Image",
+    size: "30MB",
+    time: "None",
+  },
+  {
+    id: "15",
+    src: "images/1.jpg",
+    title: "이미지15",
+    type: "Image",
+    size: "30MB",
+    time: "None",
+  },
+  {
+    id: "16",
+    src: "images/2.jpg",
+    title: "이미지16",
+    type: "Image",
+    size: "30MB",
+    time: "None",
+  },
+  {
+    id: "17",
+    src: "images/3.jpg",
+    title: "이미지17",
+    type: "Image",
+    size: "30MB",
+    time: "None",
+  },
+  {
+    id: "18",
+    src: "images/1.jpg",
+    title: "이미지18",
+    type: "Image",
+    size: "30MB",
+    time: "None",
+  },
+  {
+    id: "19",
+    src: "images/2.jpg",
+    title: "이미지19",
+    type: "Image",
+    size: "30MB",
+    time: "None",
+  },
+];
+
+export default contentDatabase;

@@ -1,4 +1,5 @@
 interface Props {
+  disabled?: boolean;
   onClick: () => void;
   label: string;
   fit?: boolean;
@@ -6,6 +7,7 @@ interface Props {
 }
 
 const Button: React.FC<Props> = ({
+  disabled,
   onClick,
   label,
   fit = false,
@@ -13,15 +15,16 @@ const Button: React.FC<Props> = ({
 }) => {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       className={`
         ${fit ? "w-fit" : "w-full"}
         h-fit
-        ${red ? "bg-rose-500" : "bg-sky-500 "}
         text-white 
         p-2 
-        rounded-lg 
-        hover:brightness-95 
+        rounded-lg
+        ${disabled ? "bg-gray-300" : red ? "bg-rose-500" : "bg-sky-500 "}
+        ${!disabled && "hover:brightness-95"} 
         font-semibold
       `}
     >

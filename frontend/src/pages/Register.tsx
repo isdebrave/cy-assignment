@@ -6,16 +6,16 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 
 const Register = () => {
-  const [id, setId] = useState("");
-  const [idError, setIdError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
 
   const onSubmit = () => {
-    if (id.trim() === "") {
-      setIdError(true);
+    if (email.trim() === "") {
+      setEmailError(true);
     }
     if (phone.trim() === "") {
       setPhoneError(true);
@@ -23,24 +23,20 @@ const Register = () => {
     if (password.trim() === "") {
       setPasswordError(true);
     }
-
-    console.log(id);
-    console.log(phone);
-    console.log(password);
   };
 
   return (
     <AuthContainer>
-      <AuthHeading text="회원가입" />
+      <AuthHeading title="회원가입" isLogin={false} />
       <div className="flex flex-col">
         <Input
-          placeholder="아이디"
+          placeholder="이메일"
           onChange={(e) => {
-            setId(e.target.value);
-            setIdError(false);
+            setEmail(e.target.value);
+            setEmailError(false);
           }}
-          isError={idError}
-          errorMessage="아이디를 적어주세요."
+          isError={emailError}
+          errorMessage="이메일을 적어주세요."
         />
         <Input
           placeholder="휴대폰 번호(010-123-4567)"

@@ -1,25 +1,14 @@
+import axios from "axios";
 import { useState } from "react";
-import Button from "../components/Button";
 import { useNavigate } from "react-router";
 
-const data = [
-  { id: "1", title: "이미지1" },
-  { id: "2", title: "이미지2" },
-  { id: "3", title: "이미지3" },
-  { id: "4", title: "이미지4" },
-  { id: "5", title: "이미지5" },
-  { id: "6", title: "이미지6" },
-  { id: "7", title: "이미지7" },
-  { id: "8", title: "이미지8" },
-  { id: "9", title: "이미지9" },
-  { id: "10", title: "이미지10" },
-  { id: "11", title: "이미지11" },
-  { id: "12", title: "이미지12" },
-  { id: "13", title: "이미지13" },
-];
+import Button from "../components/Button";
+import useRemoveList from "../hooks/useRemoveList";
+import { removeListType } from "../types/removeListType";
 
 const Remove = () => {
   const navigate = useNavigate();
+  const { data: removeList, removeRemoveListMutate } = useRemoveList();
   const [removeListId, setRemoveListId] = useState<string[]>([]);
 
   const onSubmit = () => {
@@ -28,13 +17,14 @@ const Remove = () => {
     }
 
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      console.log(removeListId);
+      removeRemoveListMutate(removeListId);
+      setRemoveListId([]);
     }
   };
 
   return (
-    <div className="container max-w-xl mx-auto py-4 space-y-3">
-      <div className="flex justify-between">
+    <div className="container max-w-xl mx-auto py-4">
+      <div className="flex justify-between mb-6">
         <h1 className="text-3xl">휴지통</h1>
         <div className="space-x-1">
           <Button onClick={onSubmit} label="삭제" fit red />
@@ -42,7 +32,7 @@ const Remove = () => {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        {data.map((item) => (
+        {removeList?.map((item: removeListType) => (
           <div key={item.id} className="flex items-center gap-3">
             <input
               id={item.id}
@@ -51,11 +41,19 @@ const Remove = () => {
             />
             <label htmlFor={item.id} className="flex items-center gap-3">
               <div className="w-[80px] h-[80px] flex relative">
-                <img
-                  src="https://source.unsplash.com/random"
-                  alt="Image"
-                  className="w-full object-cover rounded-lg"
-                />
+                {item.type === "Video" ? (
+                  <video
+                    src={`${axios.defaults.baseURL}/${item.src}`}
+                    autoPlay
+                    className="w-full object-cover rounded-lg"
+                  ></video>
+                ) : (
+                  <img
+                    src={`${axios.defaults.baseURL}/${item.src}`}
+                    alt="Image"
+                    className="w-full object-cover rounded-lg"
+                  />
+                )}
               </div>
               <div>{item.title}</div>
             </label>

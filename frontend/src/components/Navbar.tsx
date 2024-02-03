@@ -1,8 +1,24 @@
+import axios from "axios";
 import { Link } from "react-router-dom";
 
+import useMedia from "../hooks/useMedia";
+
 const Navbar = () => {
+  const { postPlayListMutate } = useMedia();
+
   const onSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files);
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB;
+
+    const formData = new FormData();
+    for (const file of e.target.files!) {
+      if (file.size > MAX_FILE_SIZE) {
+        return alert("파일 각각의 최대 용량은 1MB입니다");
+      }
+
+      formData.append("media", file);
+    }
+
+    postPlayListMutate(formData);
   };
 
   return (
@@ -12,6 +28,7 @@ const Navbar = () => {
           CYCLOID
         </Link>
         <Link to="/remove">삭제 리스트</Link>
+        <Link to={`${axios.defaults.baseURL}/auth/logout`}>로그아웃</Link>
       </div>
       <div className="col-span-2 text-end">
         <form encType="multipart/form-data">
@@ -21,7 +38,7 @@ const Navbar = () => {
             type="file"
             hidden
             multiple
-            accept="image/*"
+            accept="image/*, video/*"
             onChange={onSubmit}
           />
           <label
