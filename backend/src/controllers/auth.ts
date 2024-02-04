@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import jwt, { TokenExpiredError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import userDatabase from "../database/user";
 import refreshTokenDatabase from "../database/refreshToken";
@@ -10,11 +10,11 @@ export const login = (req: Request, res: Response) => {
   const user = userDatabase.find((item) => item.email === email);
 
   if (!user) {
-    return res.status(403).json("Not Authorized");
+    return res.status(401).json("이메일 계정이 없습니다.");
   }
 
   if (user.password !== password) {
-    return res.status(403).json("Wrong Password");
+    return res.status(401).json("비밀번호가 틀렸습니다.");
   }
 
   try {
@@ -22,7 +22,7 @@ export const login = (req: Request, res: Response) => {
     const accessToken = jwt.sign(
       { id: user.id, name: user.name, email: user.email },
       process.env.ACCESS_SECRET!,
-      { expiresIn: "10s" }
+      { expiresIn: "1h" }
     );
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -37,60 +37,10 @@ export const login = (req: Request, res: Response) => {
     );
     refreshTokenDatabase.token = refreshToken;
 
-    res.status(200).json("Login Success");
+    res.status(200).json();
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
-  }
-};
-
-export const accessToken = (req: Request, res: Response) => {
-  try {
-    const token = req.cookies.accessToken;
-
-    // accessToken 검증
-    const { id } = jwt.verify(token, process.env.ACCESS_SECRET!) as {
-      id: string;
-    };
-
-    const user = userDatabase.find((item) => item.id === id)!;
-
-    const { password, ...restUser } = user;
-
-    res.status(200).json(restUser);
-  } catch (error) {
-    if (error instanceof TokenExpiredError) {
-      try {
-        const token = refreshTokenDatabase.token;
-
-        const { id } = jwt.verify(token, process.env.REFRESH_SECRET!) as {
-          id: string;
-        };
-
-        const user = userDatabase.find((item) => item.id === id)!;
-
-        // accessToken 갱신 & 쿠키에 새로 전달
-        const accessToken = jwt.sign(
-          { id: user.id, name: user.name, email: user.email },
-          process.env.ACCESS_SECRET!,
-          { expiresIn: "10s" }
-        );
-        res.cookie("accessToken", accessToken, {
-          httpOnly: true,
-          secure: false,
-        });
-
-        const { password, ...restUser } = user;
-
-        res.status(200).json(restUser);
-      } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
-      }
-    } else {
-      console.log(error);
-      res.status(403).json(error);
-    }
   }
 };
 

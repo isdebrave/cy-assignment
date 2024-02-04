@@ -1,3 +1,2 @@
 - register 구현
-- middleware로 validation
-- fullscreen slider
+- fullscreen slider -> 영상 전체 길이만큼 fullscreen 진행되도록 만들기

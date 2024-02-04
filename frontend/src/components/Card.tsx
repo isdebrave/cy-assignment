@@ -43,8 +43,12 @@ const Card: React.FC<Props> = ({ disabled, item, trashcan }) => {
           />
         )}
       </div>
-      <div className="p-2">
-        <h3 className="text-xl font-bold mb-1">{item.title}</h3>
+      <div className="p-2 overflow-hidden">
+        <h3 className="text-xl font-bold mb-1">
+          {item.title.length > 10
+            ? item.title.slice(0, 10) + "..."
+            : item.title}
+        </h3>
         <div className="grid grid-cols-2 mb-1 font-semibold text-gray-500">
           <span>Type</span>
           <span>{item.type}</span>

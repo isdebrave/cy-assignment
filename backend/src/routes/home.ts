@@ -11,6 +11,7 @@ import {
   removePlayList,
   media,
 } from "../controllers/home";
+import { isAccessTokenValid } from "../middleware";
 
 const home = express.Router();
 
@@ -39,8 +40,8 @@ const uploads = multer({
 home.get("/content", content);
 home.get("/recentContent", recentContent);
 home.get("/playList", playList);
-home.post("/playList", addPlayList);
-home.delete("/playList", removePlayList);
-home.post("/media", uploads.array("media"), media);
+home.post("/playList", isAccessTokenValid, addPlayList);
+home.delete("/playList", isAccessTokenValid, removePlayList);
+home.post("/media", isAccessTokenValid, uploads.array("media"), media);
 
 export default home;

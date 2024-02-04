@@ -1,29 +1,11 @@
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-
-// import { trashcanListType } from "../types/trashcanListType";
-
-// const useTrashcanList = () => {
-//   const [trashcanList, setTrashcanList] = useState<trashcanListType[]>([]);
-
-//   useEffect(() => {
-//     axios
-//       .get("/trashcan")
-//       .then((response) => setTrashcanList(response.data))
-//       .catch((error) => alert(error.response.data));
-//   }, []);
-
-//   return trashcanList;
-// };
-
-// export default useTrashcanList;
-
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const useRemoveList = () => {
+  const navigate = useNavigate();
+
   const { data, error, isError } = useQuery({
     queryKey: ["useRemoveList", "/remove"],
     queryFn: () => axios.get("/remove").then((res) => res.data),
@@ -43,7 +25,10 @@ const useRemoveList = () => {
       queryClient.invalidateQueries({ queryKey: ["usePlayList"] });
       queryClient.invalidateQueries({ queryKey: ["useRecentContent"] });
     },
-    onError: (error: any) => alert(error.response.data),
+    onError: (error: any) => {
+      alert(error.response.data);
+      navigate("/auth/login");
+    },
   });
 
   const { mutateAsync: removeRemoveListMutate } = useMutation({
@@ -53,7 +38,10 @@ const useRemoveList = () => {
         .then((res) => res.data),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["useRemoveList"] }),
-    onError: (error: any) => alert(error.response.data),
+    onError: (error: any) => {
+      alert(error.response.data);
+      navigate("/auth/login");
+    },
   });
 
   return { data, postRemoveListMutate, removeRemoveListMutate };

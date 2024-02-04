@@ -11,6 +11,18 @@ const Remove = () => {
   const { data: removeList, removeRemoveListMutate } = useRemoveList();
   const [removeListId, setRemoveListId] = useState<string[]>([]);
 
+  const removeListHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    const id = e.target.id;
+
+    if (checked) {
+      setRemoveListId((cur) => [...cur, id]);
+    } else {
+      const updatedRemoveListId = removeListId.filter((item) => item !== id);
+      setRemoveListId(updatedRemoveListId);
+    }
+  };
+
   const onSubmit = () => {
     if (removeListId.length === 0) {
       return alert("삭제할 대상이 없습니다.");
@@ -34,11 +46,7 @@ const Remove = () => {
       <div className="grid grid-cols-2 gap-3">
         {removeList?.map((item: removeListType) => (
           <div key={item.id} className="flex items-center gap-3">
-            <input
-              id={item.id}
-              type="checkbox"
-              onInput={() => setRemoveListId((cur) => [...cur, item.id])}
-            />
+            <input id={item.id} type="checkbox" onInput={removeListHandler} />
             <label htmlFor={item.id} className="flex items-center gap-3">
               <div className="w-[80px] h-[80px] flex relative">
                 {item.type === "Video" ? (
@@ -55,7 +63,11 @@ const Remove = () => {
                   />
                 )}
               </div>
-              <div>{item.title}</div>
+              <div>
+                {item.title.length > 10
+                  ? item.title.slice(0, 10) + "..."
+                  : item.title}
+              </div>
             </label>
           </div>
         ))}
