@@ -24,7 +24,7 @@ const PlayList = () => {
 
     const id = setTimeout(
       () => showSlides((curIndex + 1) % medias.length),
-      2000
+      10000
     );
     setKey(id);
   };
